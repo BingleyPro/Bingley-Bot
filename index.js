@@ -1,11 +1,11 @@
-import { Op } from 'sequelize';
-import fs from 'node:fs';
-import path from 'node:path';
+const { Op } = require('sequelize');
+const fs = require('fs');
+const path = require('path');
 
-import { Users } from './dbObjects.js';
+const { Users } = require('./dbObjects.js');
 
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import { token } from './config.json';
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { token } = require('./config.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 const currency = new Collection();
