@@ -1,11 +1,8 @@
-const { Op } = require('sequelize');
-const fs = require('fs');
-const path = require('path');
-
-const { Users } = require('./dbObjects.js');
-
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+import fs from 'fs';
+import path from 'path';
+import { Users } from './dbObjects.js';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import { token } from './config.json';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 const currency = new Collection();
@@ -82,18 +79,23 @@ client.on('messageCreate', async message => {
     }
 
     // Add XP to the user
-    const user = await Users.findOne({ where: { user_id: message.author.id } });
+    // get the user
+	const [user] = await Users.findOrCreate({ where: { user_id: message.author.id } });
     if (user) {
         user.XP += xpToAdd;
         await user.save();
     }
 
 	 // Send debug message to a specific channel
-	 const debugChannelId = '1217383259714093117';
-	 const debugChannel = client.channels.cache.get(debugChannelId);
-	 if (debugChannel) {
-		 debugChannel.send(`User ${user.username} gained ${amount} XP. Total XP: ${userData.XP}`);
-	 }
+	const debugChannelId = '1217383259714093117';
+	const debugChannel = client.channels.cache.get(debugChannelId);
+	if (debugChannel) {
+		if (user && user.username && userData && userData.XP !== undefined) {
+			debugChannel.send(`User ${user.username} gained ${amount} XP. Total XP: ${userData.XP}`);
+		} else {
+			console.error('Error: User or userData is null or undefined.');
+		}
+	}
 });
 
 // Voice state update event handling
