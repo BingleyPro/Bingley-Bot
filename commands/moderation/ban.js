@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-import { PermissionFlagsBits } from 'discord.js';
+const { PermissionFlagsBits } = require('discord.js');
 
 
 module.exports = {
